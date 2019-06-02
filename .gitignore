@@ -5,6 +5,8 @@ __pycache__/
 
 # 数据库文件
 db.sqlite3
+#配置文件
+config.py
 
 # C extensions
 *.so

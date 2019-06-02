@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from config_example import USERNAEM,PASSWORD,DATABASE_NAME
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -79,9 +80,9 @@ WSGI_APPLICATION = 'Django_blog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django-blog',
-        'USER': 'root',
-        'PASSWORD': 'PASSWORD',
+        'NAME': DATABASE_NAME,
+        'USER': USERNAEM,
+        'PASSWORD': PASSWORD,
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
