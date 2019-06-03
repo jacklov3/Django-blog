@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.html import strip_tags
+import markdown
 
 # Create your models here.
 
@@ -32,7 +34,8 @@ class Post(models.Model):
     created_time = models.DateTimeField()
     #文章最新修改时间
     modified_time = models.DateTimeField()
-
+    # 文章阅读量
+    views = models.PositiveIntegerField(default=0)
     #外键关系：文章与分类是多对一的关系、所以在多的一端设置外键。
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
     #外键关系: 文章与标签是多对多的关系，一篇文章可以有多个标签，一个标签下可以有多篇文章。可以为空。多对多的关系定义在哪张表都可以
@@ -41,6 +44,26 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    #添加文章阅读量的函数
+    def increase_views(self):
+        self.views += 1
+        self.save()
+
+    #重写模型的保存函数
+    def save(self,*args,**kwargs):
+        #如果没有写摘要
+        if not self.abstract:
+            #渲染文章正文的文本
+            md = markdown.Markdown(extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.codehilite',
+                'markdown.extensions.toc',
+            ])
+            #去掉HTML标签，而取前50个摘要
+            body=self.body
+            self.abstract = strip_tags(md.convert(body))[:50]
+        super(Post,self).save(*args,*kwargs)
 
     class Meta:
         ordering = ['-created_time']
